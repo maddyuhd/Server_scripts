@@ -1,12 +1,14 @@
-import sys
+import argparse
 import os
 
-videoPath = sys.argv[1]
-videoOutput = sys.argv[2]
 
-videoOutput = videoOutput+".mp4"
+ap = argparse.ArgumentParser()
 
-os.system("ffmpeg -i "+videoPath+" -strict -2 -c:v libx264 "+videoOutput)
+ap.add_argument("-v", "--videopath", required=True,
+                help="Path to input Video")
+ap.add_argument("-o", "--outname", required=True,
+                help="Name of the output Video")
 
-
-
+args = vars(ap.parse_args())
+t
+os.system("ffmpeg -i "+args["videopath"]+" -strict -2 -c:v libx264 "+args["outname"]+".mp4")
