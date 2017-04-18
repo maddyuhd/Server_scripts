@@ -10,5 +10,5 @@ ap.add_argument("-o", "--outname", required=True,
                 help="Name of the output Video")
 
 args = vars(ap.parse_args())
-t
+
 os.system("ffmpeg -i "+args["videopath"]+" -strict -2 -c:v libx264 "+args["outname"]+".mp4")
