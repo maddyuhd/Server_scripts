@@ -1,31 +1,15 @@
+import argparse
 import cv2
-# import time as t
-# import numpy as np
-import sys
+import imgutil
 
-def imresize(img, new_val=320):
+ap = argparse.ArgumentParser()
 
-    h, w = img.shape[:2]
+ap.add_argument("-v", "--videopath", required=True,
+                help="Path to input Video")
+ap.add_argument("-s", "--size", required=True,
+                help="Thumbnail size of the output Image")
 
-    ar = w / float(h)
-
-    if h > w:
-        ar = w / float(h)
-        newH = new_val
-        newW = int(newH * ar)
-
-    elif h < w:
-        ar = h / float(w)
-        newW = new_val
-        newH = int(newW * ar)
-
-    else:
-        newH = new_val
-        newW = new_val
-
-    img = cv2.resize(img, (newW, newH))
-
-    return img, newH, newW
+args = vars(ap.parse_args())
 
 
 def count_frames_manual(video_path):
@@ -70,25 +54,17 @@ def count_frames(video_path, override=False):
 
     ret, frame = video.read()
 
-    image_res, h, w = imresize(frame, thumnail_size)
+    h, w = imgutil.imd(frame)
+
+    image_res = imgutil.imresize(frame, w, h, int(args["size"]))
 
     cv2.imwrite(str(thumnail_name) + ".jpg", image_res)
-    
+
     video.release()
 
 
-# start = t.time()
+s = args["videopath"].rfind('/')
 
-# video_path = "/home/smacar/Downloads/test.mp4"
-video_path = sys.argv[1]
-s = video_path.rfind('/')
+thumnail_name = args["videopath"][s + 1:-4]
 
-thumnail_name = video_path[s + 1:-4]
-
-thumnail_size = 200
-
-num = count_frames(video_path)
-
-# end = t.time()
-
-# print("Time Taken: ", str((end - start)))
+num = count_frames(args["videopath"])
